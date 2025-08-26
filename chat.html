@@ -1,0 +1,57 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="header">
+    <div><strong>Global Chat</strong></div>
+    <div class="nav">
+      <a href="/home.html">Home</a>
+      <a href="/stats.html">Stats</a>
+      <a href="/rng.html">RNG</a>
+      <a href="/chat.html">Chat</a>
+      <a href="/trade.html">Trade</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+      <a href="#" id="logout">Log out</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="card">
+      <div id="messages" style="height:300px; overflow:auto; padding:8px; background:#0b1220; border-radius:10px; border:1px solid #1f2a37;"></div>
+      <div class="flex" style="margin-top:8px;">
+        <input id="msg" class="input" placeholder="Say something nice..." />
+        <button id="send" class="button">Send</button>
+      </div>
+    </div>
+  </div>
+  <script src="/js/app.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    (async () => {
+      const me = await api('/api/me');
+      const socket = io('/', { auth: { userId: me.id, username: me.username } });
+      const box = document.getElementById('messages');
+      function add(m) {
+        const div = document.createElement('div');
+        div.className = 'small';
+        const t = new Date(m.ts || Date.now()).toLocaleTimeString();
+        div.innerHTML = \`<span class="kbd">\${t}</span> <strong>\${m.from}</strong>: \${m.message}\`;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+      }
+      document.getElementById('send').onclick = () => {
+        const v = document.getElementById('msg').value.trim();
+        if (!v) return;
+        socket.emit('chat:message', v);
+        document.getElementById('msg').value='';
+      };
+      socket.on('chat:message', add);
+    })();
+  </script>
+</body>
+</html>

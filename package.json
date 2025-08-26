@@ -1,0 +1,23 @@
+{
+  "name": "untitled-rng-game",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development node server.js",
+    "start": "NODE_ENV=production node server.js",
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "express-session": "^1.17.3",
+    "helmet": "^7.1.0",
+    "nanoid": "^5.0.7",
+    "socket.io": "^4.7.5",
+    "sqlite3": "^5.1.7",
+    "better-sqlite3": "^11.3.0",
+    "uuid": "^9.0.1"
+  }
+}

@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stats</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="header">
+    <div><strong>Stats</strong></div>
+    <div class="nav">
+      <a href="/home.html">Home</a>
+      <a href="/stats.html">Stats</a>
+      <a href="/rng.html">RNG</a>
+      <a href="/chat.html">Chat</a>
+      <a href="/trade.html">Trade</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+      <a href="#" id="logout">Log out</a>
+    </div>
+  </div>
+  <div class="container grid" id="stats"></div>
+  <script src="/js/app.js"></script>
+  <script>
+    (async () => {
+      const me = await api('/api/stats');
+      const root = document.getElementById('stats');
+      root.innerHTML = `
+        <div class="card">
+          <h3>Profile</h3>
+          <p><strong>User:</strong> ${me.user.username}</p>
+          <p><strong>Points:</strong> ${me.user.points}</p>
+          <p><strong>Boxes Opened:</strong> ${me.user.opened}</p>
+          <p class="small">Joined: ${new Date(me.user.created_at).toLocaleString()}</p>
+        </div>
+        <div class="card">
+          <h3>Inventory</h3>
+          ${me.inventory.length ? '' : '<p class="small">No items yet. Go open a box!</p>'}
+          <ul class="list">
+            ${me.inventory.map(it => `
+              <li>
+                <span class="badge ${it.rarity}">${it.rarity}</span>
+                <strong> ${it.name}</strong> × ${it.quantity}
+                <span class="small right">value ${it.base_value}</span>
+              </li>`).join('')}
+          </ul>
+        </div>`;
+    })();
+  </script>
+</body>
+</html>
